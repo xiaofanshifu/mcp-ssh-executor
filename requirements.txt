@@ -1,0 +1,2 @@
+paramiko==5.1.0
+fastmcp==4.1.4

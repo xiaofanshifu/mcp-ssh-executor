@@ -1,0 +1,12 @@
+# Python 字节码
+__pycache__/
+*.pyc
+*.pyo
+
+# 运行产物：审计日志（不入库）
+audit.jsonl
+audit.*.jsonl
+audit.spill.jsonl
+
+# 传输暂存
+*.part

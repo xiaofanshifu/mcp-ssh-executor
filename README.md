@@ -12,20 +12,20 @@
 
 ## 能力
 
-| 工具 | 作用 |
-| --- | --- |
-| `ssh_exec` | 执行 shell 命令，返回 `exit_code` + STDOUT + STDERR |
-| `sftp_upload` | 上传文件或整棵目录树，先写 `.part` 再原子替换 |
-| `sftp_download` | 下载文件或整棵目录树，同上 |
-| `sftp_list` | 列目录（只读），按时间/名称/大小排序，默认全量 |
+| 工具              | 作用                                           |
+| --------------- | -------------------------------------------- |
+| `ssh_exec`      | 执行 shell 命令，返回 `exit_code` + STDOUT + STDERR |
+| `sftp_upload`   | 上传文件或整棵目录树，先写 `.part` 再原子替换                  |
+| `sftp_download` | 下载文件或整棵目录树，同上                                |
+| `sftp_list`     | 列目录（只读），按时间/名称/大小排序，默认全量                     |
 
 ## 输出与数据完整性
 
 命令输出不做内容裁剪：
 
-| 输出大小 | 交付方式 |
-| --- | --- |
-| ≤ 64 KB | 全文直接返回 |
+| 输出大小    | 交付方式                                                    |
+| ------- | ------------------------------------------------------- |
+| ≤ 64 KB | 全文直接返回                                                  |
 | > 64 KB | 完整落盘到 `%TEMP%\ssh_mcp_output\`，返回统计、8 KB 预览与 `out_path` |
 
 落盘不设大小上限。文件是 stdout 的原始字节流，可直接 MD5 比对；磁盘写满时返回文件系统错误，已写入的部分保留在 `out_path`。
@@ -38,11 +38,11 @@
 
 三个参数语义不同，不要混用：
 
-| 参数 | 含义 | 默认 |
-| --- | --- | --- |
-| `timeout` | **空闲**超时：连续这么多秒没有新输出才判失败 | 30 |
-| `connect_timeout` | 建立连接、建立 channel 的超时 | 10 |
-| `max_runtime` | 命令总时长上限，0 表示不限 | 0 |
+| 参数                | 含义                       | 默认 |
+| ----------------- | ------------------------ | -- |
+| `timeout`         | **空闲**超时：连续这么多秒没有新输出才判失败 | 30 |
+| `connect_timeout` | 建立连接、建立 channel 的超时      | 10 |
+| `max_runtime`     | 命令总时长上限，0 表示不限           | 0  |
 
 命令整段重定向到文件（`... > /tmp/x 2>&1`）时，本次调用在命令结束前收不到任何输出，必须加大 `timeout`，或改为后台执行后轮询。
 
@@ -72,6 +72,8 @@
 pip install -r requirements.txt
 ```
 
+### workbuddy
+
 在 `~/.workbuddy/mcp.json`（Windows 为 `%USERPROFILE%\.workbuddy\mcp.json`）中注册：
 
 ```json
@@ -86,6 +88,22 @@ pip install -r requirements.txt
 ```
 
 保存后在连接器管理页的「自定义连接器」中对该服务点「信任」。
+
+### opencode
+
+注册
+
+```sh
+opencode mcp add ssh-executor --global -- "C:\path\to\python.exe" "C:\path\to\mcp-ssh-executor\ssh_mcp_server.py"
+```
+
+`--global` 写入用户级配置（`~/.config/opencode/opencode.json`），去掉则写入当前项目的 `opencode.json`。
+
+验证连接
+
+```sh
+opencode mcp list
+```
 
 ## 已知边界
 

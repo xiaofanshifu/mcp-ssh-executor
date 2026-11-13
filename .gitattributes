@@ -1,1 +1,7 @@
+# Git 自动判断文件是不是文本
 * text=auto eol=lf
+# 例外：Windows 脚本必须 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+
